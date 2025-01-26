@@ -16,8 +16,8 @@ public class GiliLangParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, IDENTIFIER=11, NUM=12, DIG=13, WS=14;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, PRINT=9, 
+		LET=10, IDENTIFIER=11, NUM=12, DIG=13, WS=14;
 	public static final int
 		RULE_program = 0, RULE_statement = 1, RULE_expression = 2, RULE_term = 3, 
 		RULE_factor = 4;
@@ -30,15 +30,15 @@ public class GiliLangParser extends Parser {
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'print'", "'('", "')'", "';'", "'let'", "'='", "'+'", "'-'", "'*'", 
-			"'/'"
+			null, "'('", "')'", "';'", "'='", "'+'", "'-'", "'*'", "'/'", "'print'", 
+			"'let'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, null, null, null, null, null, null, "IDENTIFIER", 
-			"NUM", "DIG", "WS"
+			null, null, null, null, null, null, null, null, null, "PRINT", "LET", 
+			"IDENTIFIER", "NUM", "DIG", "WS"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -113,6 +113,11 @@ public class GiliLangParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GiliLangListener ) ((GiliLangListener)listener).exitProgram(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GiliLangVisitor ) return ((GiliLangVisitor<? extends T>)visitor).visitProgram(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ProgramContext program() throws RecognitionException {
@@ -135,7 +140,7 @@ public class GiliLangParser extends Parser {
 				setState(13); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 2082L) != 0) );
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & 3584L) != 0) );
 			setState(15);
 			match(EOF);
 			}
@@ -153,9 +158,11 @@ public class GiliLangParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class StatementContext extends ParserRuleContext {
+		public TerminalNode PRINT() { return getToken(GiliLangParser.PRINT, 0); }
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
+		public TerminalNode LET() { return getToken(GiliLangParser.LET, 0); }
 		public TerminalNode IDENTIFIER() { return getToken(GiliLangParser.IDENTIFIER, 0); }
 		public StatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -169,6 +176,11 @@ public class GiliLangParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GiliLangListener ) ((GiliLangListener)listener).exitStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GiliLangVisitor ) return ((GiliLangVisitor<? extends T>)visitor).visitStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final StatementContext statement() throws RecognitionException {
@@ -178,34 +190,34 @@ public class GiliLangParser extends Parser {
 			setState(34);
 			_errHandler.sync(this);
 			switch (_input.LA(1)) {
-			case T__0:
+			case PRINT:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(17);
-				match(T__0);
+				match(PRINT);
 				setState(18);
-				match(T__1);
+				match(T__0);
 				setState(19);
 				expression(0);
 				setState(20);
-				match(T__2);
+				match(T__1);
 				setState(21);
-				match(T__3);
+				match(T__2);
 				}
 				break;
-			case T__4:
+			case LET:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(23);
-				match(T__4);
+				match(LET);
 				setState(24);
 				match(IDENTIFIER);
 				setState(25);
-				match(T__5);
+				match(T__3);
 				setState(26);
 				expression(0);
 				setState(27);
-				match(T__3);
+				match(T__2);
 				}
 				break;
 			case IDENTIFIER:
@@ -214,11 +226,11 @@ public class GiliLangParser extends Parser {
 				setState(29);
 				match(IDENTIFIER);
 				setState(30);
-				match(T__5);
+				match(T__3);
 				setState(31);
 				expression(0);
 				setState(32);
-				match(T__3);
+				match(T__2);
 				}
 				break;
 			default:
@@ -255,6 +267,11 @@ public class GiliLangParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GiliLangListener ) ((GiliLangListener)listener).exitExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GiliLangVisitor ) return ((GiliLangVisitor<? extends T>)visitor).visitExpression(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -294,7 +311,7 @@ public class GiliLangParser extends Parser {
 					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 					setState(40);
 					_la = _input.LA(1);
-					if ( !(_la==T__6 || _la==T__7) ) {
+					if ( !(_la==T__4 || _la==T__5) ) {
 					_errHandler.recoverInline(this);
 					}
 					else {
@@ -344,6 +361,11 @@ public class GiliLangParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GiliLangListener ) ((GiliLangListener)listener).exitTerm(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GiliLangVisitor ) return ((GiliLangVisitor<? extends T>)visitor).visitTerm(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final TermContext term() throws RecognitionException {
@@ -382,7 +404,7 @@ public class GiliLangParser extends Parser {
 					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 					setState(51);
 					_la = _input.LA(1);
-					if ( !(_la==T__8 || _la==T__9) ) {
+					if ( !(_la==T__6 || _la==T__7) ) {
 					_errHandler.recoverInline(this);
 					}
 					else {
@@ -431,6 +453,11 @@ public class GiliLangParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof GiliLangListener ) ((GiliLangListener)listener).exitFactor(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof GiliLangVisitor ) return ((GiliLangVisitor<? extends T>)visitor).visitFactor(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final FactorContext factor() throws RecognitionException {
@@ -454,15 +481,15 @@ public class GiliLangParser extends Parser {
 				match(IDENTIFIER);
 				}
 				break;
-			case T__1:
+			case T__0:
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(60);
-				match(T__1);
+				match(T__0);
 				setState(61);
 				expression(0);
 				setState(62);
-				match(T__2);
+				match(T__1);
 				}
 				break;
 			default:
@@ -517,35 +544,35 @@ public class GiliLangParser extends Parser {
 		"6\b\u0003\n\u0003\f\u00039\t\u0003\u0001\u0004\u0001\u0004\u0001\u0004"+
 		"\u0001\u0004\u0001\u0004\u0001\u0004\u0003\u0004A\b\u0004\u0001\u0004"+
 		"\u0000\u0002\u0004\u0006\u0005\u0000\u0002\u0004\u0006\b\u0000\u0002\u0001"+
-		"\u0000\u0007\b\u0001\u0000\t\nD\u0000\u000b\u0001\u0000\u0000\u0000\u0002"+
-		"\"\u0001\u0000\u0000\u0000\u0004$\u0001\u0000\u0000\u0000\u0006/\u0001"+
-		"\u0000\u0000\u0000\b@\u0001\u0000\u0000\u0000\n\f\u0003\u0002\u0001\u0000"+
-		"\u000b\n\u0001\u0000\u0000\u0000\f\r\u0001\u0000\u0000\u0000\r\u000b\u0001"+
-		"\u0000\u0000\u0000\r\u000e\u0001\u0000\u0000\u0000\u000e\u000f\u0001\u0000"+
-		"\u0000\u0000\u000f\u0010\u0005\u0000\u0000\u0001\u0010\u0001\u0001\u0000"+
-		"\u0000\u0000\u0011\u0012\u0005\u0001\u0000\u0000\u0012\u0013\u0005\u0002"+
-		"\u0000\u0000\u0013\u0014\u0003\u0004\u0002\u0000\u0014\u0015\u0005\u0003"+
-		"\u0000\u0000\u0015\u0016\u0005\u0004\u0000\u0000\u0016#\u0001\u0000\u0000"+
-		"\u0000\u0017\u0018\u0005\u0005\u0000\u0000\u0018\u0019\u0005\u000b\u0000"+
-		"\u0000\u0019\u001a\u0005\u0006\u0000\u0000\u001a\u001b\u0003\u0004\u0002"+
-		"\u0000\u001b\u001c\u0005\u0004\u0000\u0000\u001c#\u0001\u0000\u0000\u0000"+
-		"\u001d\u001e\u0005\u000b\u0000\u0000\u001e\u001f\u0005\u0006\u0000\u0000"+
-		"\u001f \u0003\u0004\u0002\u0000 !\u0005\u0004\u0000\u0000!#\u0001\u0000"+
-		"\u0000\u0000\"\u0011\u0001\u0000\u0000\u0000\"\u0017\u0001\u0000\u0000"+
-		"\u0000\"\u001d\u0001\u0000\u0000\u0000#\u0003\u0001\u0000\u0000\u0000"+
-		"$%\u0006\u0002\uffff\uffff\u0000%&\u0003\u0006\u0003\u0000&,\u0001\u0000"+
-		"\u0000\u0000\'(\n\u0002\u0000\u0000()\u0007\u0000\u0000\u0000)+\u0003"+
-		"\u0006\u0003\u0000*\'\u0001\u0000\u0000\u0000+.\u0001\u0000\u0000\u0000"+
-		",*\u0001\u0000\u0000\u0000,-\u0001\u0000\u0000\u0000-\u0005\u0001\u0000"+
-		"\u0000\u0000.,\u0001\u0000\u0000\u0000/0\u0006\u0003\uffff\uffff\u0000"+
-		"01\u0003\b\u0004\u000017\u0001\u0000\u0000\u000023\n\u0002\u0000\u0000"+
-		"34\u0007\u0001\u0000\u000046\u0003\b\u0004\u000052\u0001\u0000\u0000\u0000"+
-		"69\u0001\u0000\u0000\u000075\u0001\u0000\u0000\u000078\u0001\u0000\u0000"+
-		"\u00008\u0007\u0001\u0000\u0000\u000097\u0001\u0000\u0000\u0000:A\u0005"+
-		"\f\u0000\u0000;A\u0005\u000b\u0000\u0000<=\u0005\u0002\u0000\u0000=>\u0003"+
-		"\u0004\u0002\u0000>?\u0005\u0003\u0000\u0000?A\u0001\u0000\u0000\u0000"+
-		"@:\u0001\u0000\u0000\u0000@;\u0001\u0000\u0000\u0000@<\u0001\u0000\u0000"+
-		"\u0000A\t\u0001\u0000\u0000\u0000\u0005\r\",7@";
+		"\u0000\u0005\u0006\u0001\u0000\u0007\bD\u0000\u000b\u0001\u0000\u0000"+
+		"\u0000\u0002\"\u0001\u0000\u0000\u0000\u0004$\u0001\u0000\u0000\u0000"+
+		"\u0006/\u0001\u0000\u0000\u0000\b@\u0001\u0000\u0000\u0000\n\f\u0003\u0002"+
+		"\u0001\u0000\u000b\n\u0001\u0000\u0000\u0000\f\r\u0001\u0000\u0000\u0000"+
+		"\r\u000b\u0001\u0000\u0000\u0000\r\u000e\u0001\u0000\u0000\u0000\u000e"+
+		"\u000f\u0001\u0000\u0000\u0000\u000f\u0010\u0005\u0000\u0000\u0001\u0010"+
+		"\u0001\u0001\u0000\u0000\u0000\u0011\u0012\u0005\t\u0000\u0000\u0012\u0013"+
+		"\u0005\u0001\u0000\u0000\u0013\u0014\u0003\u0004\u0002\u0000\u0014\u0015"+
+		"\u0005\u0002\u0000\u0000\u0015\u0016\u0005\u0003\u0000\u0000\u0016#\u0001"+
+		"\u0000\u0000\u0000\u0017\u0018\u0005\n\u0000\u0000\u0018\u0019\u0005\u000b"+
+		"\u0000\u0000\u0019\u001a\u0005\u0004\u0000\u0000\u001a\u001b\u0003\u0004"+
+		"\u0002\u0000\u001b\u001c\u0005\u0003\u0000\u0000\u001c#\u0001\u0000\u0000"+
+		"\u0000\u001d\u001e\u0005\u000b\u0000\u0000\u001e\u001f\u0005\u0004\u0000"+
+		"\u0000\u001f \u0003\u0004\u0002\u0000 !\u0005\u0003\u0000\u0000!#\u0001"+
+		"\u0000\u0000\u0000\"\u0011\u0001\u0000\u0000\u0000\"\u0017\u0001\u0000"+
+		"\u0000\u0000\"\u001d\u0001\u0000\u0000\u0000#\u0003\u0001\u0000\u0000"+
+		"\u0000$%\u0006\u0002\uffff\uffff\u0000%&\u0003\u0006\u0003\u0000&,\u0001"+
+		"\u0000\u0000\u0000\'(\n\u0002\u0000\u0000()\u0007\u0000\u0000\u0000)+"+
+		"\u0003\u0006\u0003\u0000*\'\u0001\u0000\u0000\u0000+.\u0001\u0000\u0000"+
+		"\u0000,*\u0001\u0000\u0000\u0000,-\u0001\u0000\u0000\u0000-\u0005\u0001"+
+		"\u0000\u0000\u0000.,\u0001\u0000\u0000\u0000/0\u0006\u0003\uffff\uffff"+
+		"\u000001\u0003\b\u0004\u000017\u0001\u0000\u0000\u000023\n\u0002\u0000"+
+		"\u000034\u0007\u0001\u0000\u000046\u0003\b\u0004\u000052\u0001\u0000\u0000"+
+		"\u000069\u0001\u0000\u0000\u000075\u0001\u0000\u0000\u000078\u0001\u0000"+
+		"\u0000\u00008\u0007\u0001\u0000\u0000\u000097\u0001\u0000\u0000\u0000"+
+		":A\u0005\f\u0000\u0000;A\u0005\u000b\u0000\u0000<=\u0005\u0001\u0000\u0000"+
+		"=>\u0003\u0004\u0002\u0000>?\u0005\u0002\u0000\u0000?A\u0001\u0000\u0000"+
+		"\u0000@:\u0001\u0000\u0000\u0000@;\u0001\u0000\u0000\u0000@<\u0001\u0000"+
+		"\u0000\u0000A\t\u0001\u0000\u0000\u0000\u0005\r\",7@";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

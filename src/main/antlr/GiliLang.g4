@@ -6,8 +6,8 @@ program
     ;
 
 statement
-    : 'print' '(' expression ')' ';'
-    | 'let' IDENTIFIER '=' expression ';'
+    : PRINT '(' expression ')' ';'
+    | LET IDENTIFIER '=' expression ';'
     | IDENTIFIER '=' expression ';'
     ;
 
@@ -28,12 +28,20 @@ factor
     ;
 
 // Lexer Rules
+PRINT
+    : 'print'
+    ;
+
+LET
+    : 'let'
+    ;
+
 IDENTIFIER
     : [a-zA-Z_] [a-zA-Z0-9_]*
     ;
 
 NUM
-    : DIG* '.'? DIG+
+    : DIG+ ('.' DIG+)?
     ;
 
 DIG

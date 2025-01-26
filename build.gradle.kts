@@ -16,6 +16,10 @@ dependencies {
     antlr("org.antlr:antlr4:4.13.0")
     implementation("org.antlr:antlr4-runtime:4.13.0")
     testImplementation("org.antlr:antlr4-runtime:4.13.0")
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation("org.mockito:mockito-core:5.3.1")
 }
 
 tasks.test {
@@ -28,7 +32,11 @@ tasks.generateGrammarSource {
     outputDirectory = file("${project.layout.buildDirectory}/generated/sources/main/java/antlr")
 
     // pass -package to make generator put code in not default space
-//    arguments = listOf("-package", "io.github.lexadiky.sample.gililang")
+    arguments = listOf("-visitor")
+}
+
+tasks.generateTestGrammarSource {
+    outputDirectory = file("${layout.buildDirectory}/generated-src/antlr/test")
 }
 
 kotlin {
@@ -48,7 +56,8 @@ sourceSets {
         }
     }
     test {
-        // Make sure the generated test grammars are included in your test sources
-        java.srcDir("build/generated-src/antlr/test")
+        // Instead of referencing the folder directly, reference the task
+        // This automatically tells Gradle that compileTestKotlin depends on generateTestGrammarSource
+        java.srcDir(tasks.generateTestGrammarSource)
     }
 }
