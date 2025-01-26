@@ -8,6 +8,7 @@ fun compile(sourceCode: String): String {
     val lexer = GiliLangLexer(charStream)
     val tokens = CommonTokenStream(lexer)
     val parser = GiliLangParser(tokens)
+    val ast = ASTBuilder().visitProgram(parser.program())
 //    checkSemantics(ast)                              // Semantic Analysis
 //    val generatedCode = generateCode(ast)            // Code Generation
 //    return generatedCode
