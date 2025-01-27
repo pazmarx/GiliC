@@ -1,24 +1,43 @@
-sealed class ASTNode
+sealed class ASTNode (
+    open val line: Int,
+    open val column: Int
+)
 
-data class ProgramNode(val statements: List<StatementNode>) : ASTNode()
+data class ProgramNode(
+    val statements: List<StatementNode>,
+    override val line: Int,
+    override val column: Int
+) : ASTNode(line, column)
 
-sealed class StatementNode : ASTNode()
+sealed class StatementNode(
+    override val line: Int,
+    override val column: Int
+) : ASTNode(line, column)
 
 data class PrintStatementNode(
-    val expression: ExpressionNode
-) : StatementNode()
+    val expression: ExpressionNode,
+    override val line: Int,
+    override val column: Int
+) : StatementNode(line, column)
 
 data class LetStatementNode(
     val identifier: String,
-    val expression: ExpressionNode
-) : StatementNode()
+    val expression: ExpressionNode,
+    override val line: Int,
+    override val column: Int
+) : StatementNode(line, column)
 
 data class AssignStatementNode(
     val identifier: String,
-    val expression: ExpressionNode
-) : StatementNode()
+    val expression: ExpressionNode,
+    override val line: Int,
+    override val column: Int
+) : StatementNode(line, column)
 
-sealed class ExpressionNode : ASTNode()
+sealed class ExpressionNode(
+    override val line: Int,
+    override val column: Int
+) : ASTNode(line, column)
 
 enum class BinaryOperator {
     PLUS, MINUS, MULTIPLY, DIVIDE
@@ -27,18 +46,26 @@ enum class BinaryOperator {
 data class BinaryExpressionNode(
     val left: ExpressionNode,
     val operator: BinaryOperator,
-    val right: ExpressionNode
-) : ExpressionNode()
+    val right: ExpressionNode,
+    override val line: Int,
+    override val column: Int
+) : ExpressionNode(line, column)
 
 data class NumberLiteralNode(
-    val value: Double
-) : ExpressionNode()
+    val value: Double,
+    override val line: Int,
+    override val column: Int
+) : ExpressionNode(line, column)
 
 data class IdentifierNode(
-    val name: String
-) : ExpressionNode()
+    val identifier: String,
+    override val line: Int,
+    override val column: Int
+) : ExpressionNode(line, column)
 
 data class ParenExpressionNode(
-    val inner: ExpressionNode
-) : ExpressionNode()
+    val inner: ExpressionNode,
+    override val line: Int,
+    override val column: Int
+) : ExpressionNode(line, column)
 

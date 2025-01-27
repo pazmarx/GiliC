@@ -1,6 +1,5 @@
 plugins {
     kotlin("jvm") version "1.9.0"
-    id("antlr")
     antlr
     application
 }
@@ -27,17 +26,22 @@ tasks.test {
 }
 
 tasks.generateGrammarSource {
-    // set output directory to some arbitrary location in `/build` directory.
-    // by convention `/build/generated/sources/main/java/<generator name>` is often used
-    outputDirectory = file("${project.layout.buildDirectory}/generated/sources/main/java/antlr")
-
-    // pass -package to make generator put code in not default space
+    outputDirectory = (layout.buildDirectory.dir("generated/sources/antlr/main").get().asFile)
     arguments = listOf("-visitor")
 }
 
 tasks.generateTestGrammarSource {
-    outputDirectory = file("${layout.buildDirectory}/generated-src/antlr/test")
+    outputDirectory = (layout.buildDirectory.dir("generated/sources/antlr/test").get().asFile)
 }
+
+tasks.compileKotlin {
+    dependsOn(tasks.generateGrammarSource)
+}
+
+tasks.compileTestKotlin {
+    dependsOn(tasks.generateTestGrammarSource)
+}
+
 
 kotlin {
     jvmToolchain(8)
@@ -49,15 +53,9 @@ application {
 
 sourceSets {
     main {
-        java {
-            // telling that output generateGrammarSource should be part of main source set
-            // actuall passed value will be equal to `outputDirectory` that we configured above
-            srcDir(tasks.generateGrammarSource)
-        }
+        java.srcDir(tasks.generateGrammarSource.map { it.outputDirectory })
     }
     test {
-        // Instead of referencing the folder directly, reference the task
-        // This automatically tells Gradle that compileTestKotlin depends on generateTestGrammarSource
-        java.srcDir(tasks.generateTestGrammarSource)
+        java.srcDir(tasks.generateTestGrammarSource.map { it.outputDirectory })
     }
 }
