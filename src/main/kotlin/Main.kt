@@ -3,7 +3,7 @@ import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 
 
-fun compile(sourceCode: String): String {
+fun compile(sourceCode: String): ByteArray {
     val charStream = CharStreams.fromString(sourceCode)
 
     // Lex
@@ -26,9 +26,8 @@ fun compile(sourceCode: String): String {
     if (parser.numberOfSyntaxErrors > 0 || errors.isNotEmpty())
         error("Compilation failed due to errors.")
 
-//    val generatedCode = generateCode(ast)            // Code Generation
-//    return generatedCode
-    return sourceCode // ToDo: Delete this line
+    val generatedCode = CodeGenerator().generateClass("GiliMain", programAst)           // Code Generation
+    return generatedCode
 }
 
 fun main() {
