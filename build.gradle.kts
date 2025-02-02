@@ -61,3 +61,10 @@ sourceSets {
         java.srcDir(tasks.generateTestGrammarSource.map { it.outputDirectory })
     }
 }
+
+tasks.register<JavaExec>("compileGili") {
+    classpath = sourceSets["main"].runtimeClasspath
+    mainClass.set("MainKt")
+    args("giliPrograms")
+}
+
